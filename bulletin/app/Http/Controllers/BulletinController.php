@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\BulletinCreated;
+use App\Jobs\BulletinDeleted;
 use App\Jobs\Bulletins;
+use App\Jobs\BulletinUpdated;
 use App\Models\Bulletin;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
@@ -59,7 +61,7 @@ class BulletinController extends Controller
             'description' => 'required|string'
         ]);
 
-        $bulletin = Bulletin::createOrUpdate(
+        $bulletin = Bulletin::updateOrCreate(
             [
                 'id' => $id
             ],
@@ -68,6 +70,8 @@ class BulletinController extends Controller
                 'description' => $fields['description']
             ]
         );
+
+        BulletinUpdated::dispatch($bulletin->toArray());
 
         return response()->json($bulletin);
     }
@@ -82,7 +86,7 @@ class BulletinController extends Controller
     public function destroy($id)
     {
         $bulletin = Bulletin::destroy($id);
-
+        BulletinDeleted::dispatch($id);
         return response()->json($bulletin);
     }
 }
