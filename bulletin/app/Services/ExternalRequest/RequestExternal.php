@@ -30,7 +30,7 @@ class RequestExternal
 
 
 
-        $response = $client->request($method, $uri, ['form_params' => $form_params, 'headers' => $headers]);
+        $response = $client->request($method, $uri, ['form_params' => $form_params, 'headers' => $headers, 'http_errors' => false]);
 
         return $response->getBody()->getContents();
     }
